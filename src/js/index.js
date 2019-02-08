@@ -1,9 +1,7 @@
-import "../sass/index.sass";
-import "../index.html";
+import "index.sass";
+import "index.html";
 import "@babel/polyfill";
 import axios from "axios";
-
-console.log("hello hihi index");
 
 async function asyncApiRes() {
   console.log("async: 1");

@@ -10,13 +10,23 @@ module.exports = {
   mode: process.env.NODE_ENV,
   context: path.resolve(__dirname, "./src"),
   entry: {
-    index: "./js/index.js",
-    about: "./js/about.js"
+    index: "index.js",
+    about: "about.js"
   },
   output: {
     // 預設output資料夾 ./dist ,也可自訂path修改如下
     path: path.resolve(__dirname, "./dist"),
     filename: "./js/[name].js"
+  },
+  // 簡化引入路徑設定
+  resolve: {
+    modules: [
+      path.resolve("src"),
+      path.resolve("src/js"),
+      path.resolve("src/sass"),
+      path.resolve("node_modules")
+    ],
+    extensions: [".js"] // 引入時副檔名.js可省略不寫
   },
   devServer: {
     compress: true,
