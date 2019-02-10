@@ -46,6 +46,20 @@ module.exports = {
   },
   module: {
     rules: [
+      // 編譯pug
+      {
+        test: /\.(pug)$/,
+        use: [
+          "html-loader",
+          {
+            loader: "pug-html-loader",
+            // pug 編譯完後不壓縮
+            options: {
+              pretty: true
+            }
+          }
+        ]
+      },
       {
         test: /\.(woff|woff2|ttf|eot)$/,
         loader: "file-loader",
@@ -121,11 +135,19 @@ module.exports = {
       filename: "index.html",
       template: "html/index.html",
       chunks: ["index"]
+      // html 編譯完後壓縮
+      // minify: {
+      //   collapseWhitespace: true,
+      //   removeComments: true,
+      //   removeRedundantAttributes: true,
+      //   removeScriptTypeAttributes: true,
+      //   removeStyleLinkTypeAttributes: true,
+      //   useShortDoctype: true
+      // }
     }),
     new HtmlWebpackPlugin({
-      title: "About Webpack4 前端自動化開發",
       filename: "about.html",
-      template: "html/about.html",
+      template: "pug/about.pug",
       chunks: ["about"]
     })
   ]
