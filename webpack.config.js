@@ -66,6 +66,8 @@ module.exports = {
     rules: [
       {
         test: /\.(woff|woff2|ttf|eot)$/,
+        include: path.resolve(__dirname, "./src/assets"),
+        exclude: path.resolve(__dirname, "./node_modules"),
         loader: "file-loader",
         options: {
           name: "[path][name].[ext]?[hash:8]"
@@ -74,15 +76,21 @@ module.exports = {
       // css loader
       {
         test: /\.css$/,
+        include: path.resolve(__dirname, "./src/css"),
+        exclude: path.resolve(__dirname, "./node_modules"),
         use: ["style-loader", "css-loader", "postcss-loader"]
       },
       {
         test: /\.(sass|scss)$/,
+        include: path.resolve(__dirname, "./src/sass"),
+        exclude: path.resolve(__dirname, "./node_modules"),
         use: ["style-loader", "css-loader", "postcss-loader", "sass-loader"]
       },
       // babel 編譯
       {
         test: /\.js$/,
+        // 目標範圍: js編譯必須為全部,可以設定 '.'根目錄
+        include: path.resolve(__dirname, "."),
         use: "babel-loader"
       },
       /*
@@ -93,6 +101,8 @@ module.exports = {
       */
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        include: path.resolve(__dirname, "./src/images"),
+        exclude: path.resolve(__dirname, "./node_modules"),
         use: [
           {
             loader: "url-loader",
