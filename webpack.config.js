@@ -44,6 +44,24 @@ module.exports = {
       warnings: false
     }
   },
+  /*
+  optimization 優化開發時的編譯速度
+  將node_modules插件檔案與自己寫的檔案拆分
+  開發時就不會全部檔案都重新編譯，只會重新編譯有更改的檔案
+  更多優化設定：https://webpack.docschina.org/configuration/optimization/
+  */
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules/,
+          name: "vendor",
+          chunks: "initial",
+          enforce: true
+        }
+      }
+    }
+  },
   module: {
     rules: [
       // 編譯pug
@@ -134,7 +152,7 @@ module.exports = {
       title: "Index Webpack4 前端自動化開發",
       filename: "index.html",
       template: "html/index.html",
-      chunks: ["index"]
+      chunks: ["vendor", "index"]
       // html 編譯完後壓縮
       // minify: {
       //   collapseWhitespace: true,
@@ -148,7 +166,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: "about.html",
       template: "pug/about.pug",
-      chunks: ["about"]
+      chunks: ["vendor", "about"]
     })
   ]
 };
