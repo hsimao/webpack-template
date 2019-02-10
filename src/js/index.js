@@ -1,7 +1,5 @@
 import "index.sass";
-import "index.html";
 import "@babel/polyfill";
-import axios from "axios";
 
 async function asyncApiRes() {
   console.log("async: 1");
@@ -20,3 +18,8 @@ async function asyncApiRes() {
   console.log("async: 4");
 }
 asyncApiRes();
+
+console.log("[jQuery $] ", $);
+axios.get("https://api.github.com/zen").then(val => {
+  console.log("[axios get data] ", val.data);
+});

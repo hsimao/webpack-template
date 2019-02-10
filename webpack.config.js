@@ -1,6 +1,7 @@
-// 使用 node path.resolve 將動態相對路徑轉換成絕對路徑
-// 避免不同作業系統路徑不一致
 const path = require("path");
+const webpack = require("webpack");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   mode: process.env.NODE_ENV,
@@ -12,7 +13,7 @@ module.exports = {
   output: {
     // 預設output資料夾 ./dist ,也可自訂path修改如下
     path: path.resolve(__dirname, "./dist"),
-    filename: "./js/[name].js"
+    filename: "./js/[name].js?[hash:8]"
   },
   // 簡化引入路徑設定
   resolve: {
@@ -45,17 +46,12 @@ module.exports = {
   },
   module: {
     rules: [
-      // html loader
       {
-        test: /\.html$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "[path][name].[ext]"
-            }
-          }
-        ]
+        test: /\.(woff|woff2|ttf|eot)$/,
+        loader: "file-loader",
+        options: {
+          name: "[path][name].[ext]?[hash:8]"
+        }
       },
       // css loader
       {
@@ -109,5 +105,28 @@ module.exports = {
         ]
       }
     ]
-  }
+  },
+  plugins: [
+    new CopyWebpackPlugin([{ from: "assets", to: "assets" }]),
+    // 設定通用插件，省去每個組件或檔案都要import
+    new webpack.ProvidePlugin({
+      $: "jquery",
+      jQuery: "jquery",
+      "window.jQuery": "jquery",
+      axios: "axios"
+    }),
+    // 對應html/資料夾內的樣板產出對應html
+    new HtmlWebpackPlugin({
+      title: "Index Webpack4 前端自動化開發",
+      filename: "index.html",
+      template: "html/index.html",
+      chunks: ["index"]
+    }),
+    new HtmlWebpackPlugin({
+      title: "About Webpack4 前端自動化開發",
+      filename: "about.html",
+      template: "html/about.html",
+      chunks: ["about"]
+    })
+  ]
 };
