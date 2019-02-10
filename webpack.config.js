@@ -2,13 +2,13 @@ const path = require("path");
 const webpack = require("webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 module.exports = {
   mode: process.env.NODE_ENV,
   context: path.resolve(__dirname, "./src"),
   entry: {
-    index: "index.js",
-    about: "about.js"
+    index: "index"
   },
   output: {
     // 預設output資料夾 ./dist ,也可自訂path修改如下
@@ -24,7 +24,7 @@ module.exports = {
       path.resolve("src/images"),
       path.resolve("node_modules")
     ],
-    extensions: [".js"] // 引入時副檔名.js可省略不寫
+    extensions: [".js", ".vue"] // 引入時副檔名.js可省略不寫
   },
   devServer: {
     compress: true,
@@ -64,6 +64,11 @@ module.exports = {
   },
   module: {
     rules: [
+      // 編譯.vue檔案
+      {
+        test: /\.vue$/,
+        loader: "vue-loader"
+      },
       {
         test: /\.(woff|woff2|ttf|eot)$/,
         include: path.resolve(__dirname, "./src/assets"),
@@ -73,18 +78,24 @@ module.exports = {
           name: "[path][name].[ext]?[hash:8]"
         }
       },
+      {
+        test: /\.(sass|scss)$/,
+        use: [
+          "vue-style-loader",
+          "css-loader",
+          "postcss-loader",
+          {
+            loader: "sass-loader",
+            options: {
+              indentedSyntax: true
+            }
+          }
+        ]
+      },
       // css loader
       {
         test: /\.css$/,
-        include: path.resolve(__dirname, "./src/css"),
-        exclude: path.resolve(__dirname, "./node_modules"),
         use: ["style-loader", "css-loader", "postcss-loader"]
-      },
-      {
-        test: /\.(sass|scss)$/,
-        include: path.resolve(__dirname, "./src/sass"),
-        exclude: path.resolve(__dirname, "./node_modules"),
-        use: ["style-loader", "css-loader", "postcss-loader", "sass-loader"]
       },
       // babel 編譯
       {
@@ -135,6 +146,7 @@ module.exports = {
     ]
   },
   plugins: [
+    new VueLoaderPlugin(),
     new CopyWebpackPlugin([{ from: "assets", to: "assets" }]),
     // 設定通用插件，省去每個組件或檔案都要import
     new webpack.ProvidePlugin({
@@ -143,18 +155,10 @@ module.exports = {
       "window.jQuery": "jquery",
       axios: "axios"
     }),
-    // 對應html/資料夾內的樣板產出對應html
     new HtmlWebpackPlugin({
-      title: "Index Webpack4 前端自動化開發",
+      title: "Vue webpack",
       filename: "index.html",
-      template: "html/index.html",
-      chunks: ["vendor", "index"]
-    }),
-    new HtmlWebpackPlugin({
-      title: "About Webpack4 前端自動化開發",
-      filename: "about.html",
-      template: "html/about.html",
-      chunks: ["vendor", "about"]
+      template: "template/template.html"
     })
   ]
 };
