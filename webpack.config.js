@@ -78,13 +78,32 @@ module.exports = {
         test: /\.css$/,
         include: path.resolve(__dirname, "./src/css"),
         exclude: path.resolve(__dirname, "./node_modules"),
-        use: ["style-loader", "css-loader", "postcss-loader"]
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: true
+            }
+          },
+          "postcss-loader"
+        ]
       },
       {
         test: /\.(sass|scss)$/,
         include: path.resolve(__dirname, "./src/sass"),
         exclude: path.resolve(__dirname, "./node_modules"),
-        use: ["style-loader", "css-loader", "postcss-loader", "sass-loader"]
+        use: [
+          "style-loader",
+          {
+            loader: "css-loader",
+            options: {
+              sourceMap: true
+            }
+          },
+          "postcss-loader",
+          "sass-loader"
+        ]
       },
       // babel 編譯
       {
